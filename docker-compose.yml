@@ -15,8 +15,20 @@ services:
     command: sh -c "/app/entrypoint.sh"
     volumes:
       - .:/app
+    networks:
+      - to_do_network
     restart: always
 
+  frontend:
+    depends_on:
+      - web
+    build: ../frontend-todo/.
+    ports:
+      - "3000:3000"
+    environment:
+      - API_URL=http://web:5000
+    networks:
+      - to_do_network
   db:
     image: postgres:15
     container_name: postgres_db
@@ -28,7 +40,11 @@ services:
       POSTGRES_DB: mydatabase
     volumes:
       - postgres_data:/var/lib/postgresql/data
+    networks:
+      - to_do_network
     restart: always
 
 volumes:
   postgres_data:
+networks:
+      to_do_network: {}

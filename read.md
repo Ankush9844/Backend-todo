@@ -33,3 +33,9 @@ stderr_logfile=/var/log/flask_app.err.log
 stdout_logfile=/var/log/flask_app.out.log
 user=youruser
 >>
+
+
+
+# If you used docker compose file
+- you first up all the containers
+- then you should need to run db migratons
