@@ -54,5 +54,14 @@ def delete_todo(id):
         return jsonify({'message': 'Todo deleted'})
     return jsonify({'message': 'Todo not found'}), 404
 
+@app.route("/health")
+def health():
+    return "OK", 200  # Liveness Probe. we used this in k8s deployment
+
+@app.route("/ready")
+def ready():
+    return "Ready", 200  # Readiness Probe. we used this in k8s deployment
+
+
 if __name__ == '__main__':
     app.run(host="0.0.0.0", port=5000, debug=True)
