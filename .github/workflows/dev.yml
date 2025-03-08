@@ -74,6 +74,7 @@ jobs:
           token: ${{ secrets.GIT_TOKEN}}
       - name: change Docker tag
         run: |
+          git checkout dev
           git config --global user.name "Ankush9844"
           git config --global user.email "ankush.katkurwar30@gmail.com"
           pwd
