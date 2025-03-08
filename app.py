@@ -17,51 +17,66 @@ db.init_app(app)
 migrate = Migrate(app, db)
 
 
-@app.route('/')
+@app.route("/")
 def home():
     return "Hello, Flask!"
 
-@app.route('/todos', methods=['GET'])
+
+@app.route("/todos", methods=["GET"])
 def get_todos():
     todos = TodoItem.query.all()
-    return jsonify([{'id': todo.id, 'task': todo.task, 'completed': todo.completed} for todo in todos])
+    return jsonify(
+        [
+            {"id": todo.id, "task": todo.task, "completed": todo.completed}
+            for todo in todos
+        ]
+    )
 
-@app.route('/todos', methods=['POST'])
+
+@app.route("/todos", methods=["POST"])
 def add_todo():
     data = request.get_json()
-    new_todo = TodoItem(task=data['task'])
+    new_todo = TodoItem(task=data["task"])
     db.session.add(new_todo)
     db.session.commit()
-    return jsonify({'id': new_todo.id, 'task': new_todo.task, 'completed': new_todo.completed}), 201
+    return (
+        jsonify(
+            {"id": new_todo.id, "task": new_todo.task, "completed": new_todo.completed}
+        ),
+        201,
+    )
 
-@app.route('/todos/<int:id>', methods=['PUT'])
+
+@app.route("/todos/<int:id>", methods=["PUT"])
 def update_todo(id):
     todo = TodoItem.query.get(id)
     if todo:
         data = request.get_json()
-        todo.completed = data['completed']
+        todo.completed = data["completed"]
         db.session.commit()
-        return jsonify({'id': todo.id, 'task': todo.task, 'completed': todo.completed})
-    return jsonify({'message': 'Todo not found'}), 404
+        return jsonify({"id": todo.id, "task": todo.task, "completed": todo.completed})
+    return jsonify({"message": "Todo not found"}), 404
 
-@app.route('/todos/<int:id>', methods=['DELETE'])
+
+@app.route("/todos/<int:id>", methods=["DELETE"])
 def delete_todo(id):
     todo = TodoItem.query.get(id)
     if todo:
         db.session.delete(todo)
         db.session.commit()
-        return jsonify({'message': 'Todo deleted'})
-    return jsonify({'message': 'Todo not found'}), 404
+        return jsonify({"message": "Todo deleted"})
+    return jsonify({"message": "Todo not found"}), 404
+
 
 @app.route("/health")
 def health():
     return "OK", 200  # Liveness Probe. we used this in k8s deployment
+
 
 @app.route("/ready")
 def ready():
     return "Ready", 200  # Readiness Probe. we used this in k8s deployment
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     app.run(host="0.0.0.0", port=5000, debug=True)
-
