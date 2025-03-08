@@ -69,12 +69,12 @@ jobs:
     steps:
       - name: changing the github repo
         uses: actions/checkout@v4.2.2
-        with: 
+        with:
+          ref: dev
           repository: Ankush9844/todo-k8s-deployment
           token: ${{ secrets.GIT_TOKEN}}
       - name: change Docker tag
         run: |
-          git checkout dev
           git config --global user.name "Ankush9844"
           git config --global user.email "ankush.katkurwar30@gmail.com"
           pwd
