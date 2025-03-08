@@ -70,7 +70,7 @@ jobs:
       - name: changing the github repo
         uses: actions/checkout@v4.2.2
         with: 
-          repository: todo-k8s-deployment
+          repository: Ankush9844/todo-k8s-deployment
           token: ${{ secrets.GIT_TOKEN}}
       - name: change Docker tag
         run: |
