@@ -1,0 +1,33 @@
+name: toDoApp-dev
+on: 
+  push:
+    branches:
+    - dev
+  pull_request:
+    branches:
+    - dev
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    name: Deploy to develoment
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: [ "3.10" ]
+
+    steps:
+      - name: git checkout
+        uses: actions/checkout@v4
+      
+      - name: Python setup ${{ matrix.pyhon-version }}
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.pyhon-version }}
+    
+      - name: Install Dependencies using requirements.txt file
+        run: pip install -r requirements.txt
+
+
