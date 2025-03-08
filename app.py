@@ -4,7 +4,6 @@ from flask_cors import CORS
 from models import db, TodoItem
 from config import Config
 
-# Initialize the Flask app
 app = Flask(__name__)
 
 # Load the configuration from config.py
