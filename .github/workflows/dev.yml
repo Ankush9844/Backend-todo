@@ -12,7 +12,6 @@ permissions:
 
 jobs:
   build:
-    name: Deploy to develoment
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -20,7 +19,7 @@ jobs:
 
     steps:
       - name: git checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v4.2.2
       
       - name: Python setup ${{ matrix.python-version }}
         uses: actions/setup-python@v5
@@ -47,7 +46,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout of code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v4.2.2
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v3.6.0
       - name: Set up Docker Buildx
@@ -63,5 +62,26 @@ jobs:
           file: ./Dockerfile
           push: true
           tags: ankush9844/todo:backend-${{ github.run_number }}
-    
+
+  modify-git:
+    needs: [build, docker]
+    runs-on: ubuntu-latest
+    steps:
+      - name: changing the github repo
+        uses: actions/checkout@v4.2.2
+        with: 
+          repository: todo-k8s-deployment
+          token: ${{ secrets.GIT_TOKEN}}
+      - name: change Docker tag
+        run: |
+          git config --global user.name "Ankush9844"
+          git config --global user.email "ankush.katkurwar30@gmail.com"
+          pwd
+          cd app/backend/
+          pwd
+          sed -i "s|docker.io/ankush9844/todo*|ankush9844/todo:backend-${{ github.run_number }}|" backend.yml
+          cat backend.yml
+          git add .
+          git commit -m "docker image change to ankush9844/todo:backend-${{ github.run_number }}"
+          git push origin dev
 
