@@ -80,7 +80,7 @@ jobs:
           pwd
           cd app/backend/
           pwd
-          sed -i "s|docker.io/ankush9844/todo*|ankush9844/todo:backend-${{ github.run_number }}|" backend.yml
+          sed -i "s|docker.io/ankush9844/todo*|docker.io/ankush9844/todo:backend-${{ github.run_number }}|" backend.yml
           cat backend.yml
           git add .
           git commit -m "docker image change to ankush9844/todo:backend-${{ github.run_number }}"
