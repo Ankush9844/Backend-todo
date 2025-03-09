@@ -9,7 +9,7 @@ import os
 # DATABASE = os.getenv("DATABASE")
 # DB_HOST = os.getenv("DB_HOST")
 
-#comment added dchdasifasi cascgasgc
+#comment ankushsasdfaskgask
 
 DB_USER = os.environ["DB_USER"]
 DB_PASSWORD = os.environ["DB_PASSWORD"]
