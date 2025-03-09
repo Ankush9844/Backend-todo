@@ -80,7 +80,7 @@ jobs:
           pwd
           cd app/backend/
           pwd
-          sed -i "s|ankush9844/todo:backend*|ankush9844/todo:backend-${{ github.run_number }}|" backend.yml
+          sed -i "s|ankush9844/todo:backend.*|ankush9844/todo:backend-${{ github.run_number }}|" backend.yml
           cat backend.yml
           git add .
 

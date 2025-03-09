@@ -52,7 +52,10 @@ def update_todo(id):
     todo = TodoItem.query.get(id)
     if todo:
         data = request.get_json()
-        todo.completed = data["completed"]
+        if "completed" in data:
+            todo.completed = data["completed"]
+        if "task" in data:
+            todo.task = data["task"]
         db.session.commit()
         return jsonify({"id": todo.id, "task": todo.task, "completed": todo.completed})
     return jsonify({"message": "Todo not found"}), 404
