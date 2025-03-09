@@ -1,0 +1,95 @@
+name: toDoApp-dev
+on: 
+  push:
+    branches:
+    - dev
+  pull_request:
+    branches:
+    - dev
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: [ "3.10" ]
+
+    steps:
+      - name: git checkout
+        uses: actions/checkout@v4.2.2
+      
+      - name: Python setup ${{ matrix.python-version }}
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+    
+      - name: Install Dependencies [ python code testing, requirements ]
+        run: |
+          python -m pip install --upgrade pip
+          pip install flake8 pytest
+          if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+      
+      
+      - name: Lint with flake8(for python code test)
+        run: |
+          # stop the build if there are Python syntax errors or undefined names
+          flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
+          # exit-zero treats all errors as warnings. The GitHub editor is 127 chars wide
+          flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
+      
+
+  docker:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout of code
+        uses: actions/checkout@v4.2.2
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v3.6.0
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3.10.0
+      - name: Docker login
+        uses: docker/login-action@v3.3.0
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME}}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+      - name: Build and push docker image
+        uses: docker/build-push-action@v6.15.0
+        with: 
+          file: ./Dockerfile
+          push: true
+          tags: ankush9844/todo:backend-${{ github.run_number }}
+
+  modify-git:
+    needs: [build, docker]
+    runs-on: ubuntu-latest
+    steps:
+      - name: changing the github repo
+        uses: actions/checkout@v4.2.2
+        with:
+          ref: dev
+          repository: Ankush9844/todo-k8s-deployment
+          token: ${{ secrets.GIT_TOKEN}}
+      - name: change Docker tag
+        run: |
+          git config --global user.name "Ankush9844"
+          git config --global user.email "ankush.katkurwar30@gmail.com"
+          pwd
+          cd app/backend/
+          pwd
+          sed -i "s|ankush9844/todo:backend.*|ankush9844/todo:backend-${{ github.run_number }}|" backend.yml
+          cat backend.yml
+          git add .
+
+          # Check if there are changes before committing
+          if git diff --cached --quiet; then
+            echo "No changes detected, skipping commit and push."
+            exit 0  # Exit successfully
+          fi
+
+          git commit -m "docker image change to ankush9844/todo:backend-${{ github.run_number }}"
+          git push -f origin dev
+
