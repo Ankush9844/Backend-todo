@@ -83,6 +83,13 @@ jobs:
           sed -i "s|docker.io/ankush9844/todo:backend*|docker.io/ankush9844/todo:backend-${{ github.run_number }}|" backend.yml
           cat backend.yml
           git add .
+
+          # Check if there are changes before committing
+          if git diff --cached --quiet; then
+            echo "No changes detected, skipping commit and push."
+            exit 0  # Exit successfully
+          fi
+
           git commit -m "docker image change to ankush9844/todo:backend-${{ github.run_number }}"
-          git push origin dev
+          git push -f origin dev
 
