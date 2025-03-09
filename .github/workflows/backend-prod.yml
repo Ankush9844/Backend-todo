@@ -78,7 +78,7 @@ jobs:
           git config --global user.name "Ankush9844"
           git config --global user.email "ankush.katkurwar30@gmail.com"
           pwd
-          cd app/backend/
+          cd app/prod/backend/
           pwd
           sed -i "s|ankush9844/todo:backend.*|ankush9844/todo:backend-${{ github.run_number }}|" backend.yml
           cat backend.yml
