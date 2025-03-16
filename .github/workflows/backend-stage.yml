@@ -80,7 +80,7 @@ jobs:
           pwd
           cd app/stage/backend/
           pwd
-          sed -i "s|ankush9844/todo:backend.*|ankush9844/todo:backend-${{ github.run_number }}|" backend.yml
+          sed -i "s|ankush9844/todo:backend.*|ankush9844/todo:backend-stage-${{ github.run_number }}|" backend.yml
           cat backend.yml
           git add .
 
@@ -90,5 +90,5 @@ jobs:
             exit 0  # Exit successfully
           fi
 
-          git commit -m "docker image change to ankush9844/todo:backend-${{ github.run_number }}"
+          git commit -m "docker image change to ankush9844/todo:backend-stage-${{ github.run_number }}"
           git push -f origin stage
