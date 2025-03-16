@@ -61,7 +61,7 @@ jobs:
         with: 
           file: ./Dockerfile
           push: true
-          tags: ankush9844/todo:backend-${{ github.run_number }}
+          tags: ankush9844/todo:backend-stage-${{ github.run_number }}
 
   modify-git:
     needs: [build, docker]
