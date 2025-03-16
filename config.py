@@ -9,7 +9,7 @@ import os
 # DATABASE = os.getenv("DATABASE")
 # DB_HOST = os.getenv("DB_HOST")
 
-#dasjijhasiiahidsacaccscrgr
+#date 16-03-2025
 
 
 DB_USER = os.environ["DB_USER"]
